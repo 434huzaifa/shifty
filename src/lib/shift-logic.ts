@@ -61,3 +61,32 @@ export function validatePattern(pattern: ShiftType[]): string | null {
 
   return null; // valid
 }
+
+/**
+ * Calculate statistics for a given year and shift configuration.
+ * Returns counts of work days, off days, and unassigned days.
+ */
+export function calculateYearStats(
+  year: number,
+  config: ShiftConfig
+): { workDays: number; offDays: number; unassignedDays: number; totalDays: number } {
+  const startDate = new Date(year, 0, 1);
+  const endDate = new Date(year, 11, 31);
+  const totalDays =
+    Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+  let workDays = 0;
+  let offDays = 0;
+  let unassignedDays = 0;
+
+  for (let i = 0; i < totalDays; i++) {
+    const date = new Date(year, 0, 1 + i);
+    const status = getShiftStatus(date, config);
+
+    if (status === "work") workDays++;
+    else if (status === "off") offDays++;
+    else unassignedDays++;
+  }
+
+  return { workDays, offDays, unassignedDays, totalDays };
+}

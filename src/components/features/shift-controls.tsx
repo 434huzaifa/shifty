@@ -54,16 +54,14 @@ export function ShiftControls({
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-gray-600">
               Rotation Pattern
-              <span className="ml-2 text-xs font-normal text-gray-400">
-                ({pattern.length}/10)
-              </span>
+              <span className="ml-2 text-xs font-normal text-gray-400">({pattern.length}/10)</span>
             </label>
           </div>
 
           {/* Pill display area */}
           <div className="flex min-h-[44px] flex-wrap items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
             {pattern.length === 0 && (
-              <span className="text-xs italic text-gray-400">
+              <span className="text-xs text-gray-400 italic">
                 Click the buttons below to build your pattern…
               </span>
             )}
@@ -72,9 +70,7 @@ export function ShiftControls({
                 key={idx}
                 className={cn(
                   "group relative flex size-8 items-center justify-center rounded-full px-3 text-xs font-semibold transition",
-                  type === "work"
-                    ? "bg-emerald-500 text-white"
-                    : "bg-rose-500 text-white"
+                  type === "work" ? "bg-emerald-500 text-white" : "bg-rose-500 text-white"
                 )}
               >
                 <span className="transition group-hover:opacity-0">
@@ -84,7 +80,7 @@ export function ShiftControls({
                 <button
                   type="button"
                   onClick={() => removePill(idx)}
-                  className="p-1.5 absolute inset-0 flex items-center justify-center rounded-full text-white opacity-0 transition hover:bg-black/20 group-hover:opacity-100"
+                  className="absolute inset-0 flex items-center justify-center rounded-full p-1.5 text-white opacity-0 transition group-hover:opacity-100 hover:bg-black/20"
                   aria-label={`Remove day ${idx + 1}`}
                 >
                   <svg
