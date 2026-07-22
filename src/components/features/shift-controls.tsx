@@ -1,0 +1,177 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { validatePattern, type ShiftType } from "@/lib/shift-logic";
+
+interface ShiftControlsProps {
+  startDate: string;
+  pattern: ShiftType[];
+  onStartDateChange: (value: string) => void;
+  onPatternChange: (value: ShiftType[]) => void;
+}
+
+export function ShiftControls({
+  startDate,
+  pattern,
+  onStartDateChange,
+  onPatternChange,
+}: ShiftControlsProps) {
+  const error = validatePattern(pattern);
+  const workCount = pattern.filter((p) => p === "work").length;
+  const offCount = pattern.filter((p) => p === "off").length;
+
+  const addPill = (type: ShiftType) => {
+    if (pattern.length >= 10) return;
+    onPatternChange([...pattern, type]);
+  };
+
+  const removePill = (index: number) => {
+    const next = pattern.filter((_, i) => i !== index);
+    onPatternChange(next);
+  };
+
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h2 className="mb-5 text-lg font-semibold text-gray-800">Shift Configuration</h2>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Start Date */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="start-date" className="text-sm font-medium text-gray-600">
+            Start Date
+          </label>
+          <input
+            id="start-date"
+            type="date"
+            value={startDate}
+            onChange={(e) => onStartDateChange(e.target.value)}
+            className="rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-800 shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          />
+        </div>
+
+        {/* Pattern Builder */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-gray-600">
+              Rotation Pattern
+              <span className="ml-2 text-xs font-normal text-gray-400">
+                ({pattern.length}/10)
+              </span>
+            </label>
+          </div>
+
+          {/* Pill display area */}
+          <div className="flex min-h-[44px] flex-wrap items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+            {pattern.length === 0 && (
+              <span className="text-xs italic text-gray-400">
+                Click the buttons below to build your pattern…
+              </span>
+            )}
+            {pattern.map((type, idx) => (
+              <div
+                key={idx}
+                className={cn(
+                  "group relative flex size-8 items-center justify-center rounded-full px-3 text-xs font-semibold transition",
+                  type === "work"
+                    ? "bg-emerald-500 text-white"
+                    : "bg-rose-500 text-white"
+                )}
+              >
+                <span className="transition group-hover:opacity-0">
+                  {type === "work" ? "W" : "O"}
+                  {/* <sub className="ml-0.5 text-[9px] opacity-70">{idx + 1}</sub> */}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => removePill(idx)}
+                  className="p-1.5 absolute inset-0 flex items-center justify-center rounded-full text-white opacity-0 transition hover:bg-black/20 group-hover:opacity-100"
+                  aria-label={`Remove day ${idx + 1}`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Add buttons */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => addPill("work")}
+              disabled={pattern.length >= 10}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition",
+                pattern.length >= 10
+                  ? "cursor-not-allowed bg-emerald-300"
+                  : "bg-emerald-500 hover:bg-emerald-600 active:scale-95"
+              )}
+            >
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-white/80" />
+              Work
+            </button>
+            <button
+              type="button"
+              onClick={() => addPill("off")}
+              disabled={pattern.length >= 10}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition",
+                pattern.length >= 10
+                  ? "cursor-not-allowed bg-rose-300"
+                  : "bg-rose-500 hover:bg-rose-600 active:scale-95"
+              )}
+            >
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-white/80" />
+              Off
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary / Validation */}
+      <div className="mt-5 space-y-1.5">
+        {/* Pattern summary */}
+        <div className="rounded-lg bg-gray-50 px-4 py-2.5 text-sm text-gray-600">
+          <span className="font-medium">Pattern:</span>{" "}
+          <span className="font-semibold text-emerald-600">{workCount} work</span> →{" "}
+          <span className="font-semibold text-rose-600">{offCount} off</span> →{" "}
+          <span className="text-gray-500">(cycle: {pattern.length} days)</span>
+        </div>
+
+        {/* Validation error */}
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700 ring-1 ring-amber-200">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            {error}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
