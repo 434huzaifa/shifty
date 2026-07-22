@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Spinner } from "@/components/ui/spinner";
 
 interface SaveModalProps {
   isOpen: boolean;
@@ -79,12 +80,13 @@ export function SaveModal({ isOpen, onClose, onSave, isLoading }: SaveModalProps
               type="submit"
               disabled={isLoading}
               className={cn(
-                "flex-1 rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition",
+                "flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition",
                 isLoading
                   ? "cursor-not-allowed bg-blue-400"
                   : "bg-blue-600 hover:bg-blue-700 active:scale-95"
               )}
             >
+              {isLoading && <Spinner size="sm" className="text-white" />}
               {isLoading ? "Saving..." : "Save"}
             </button>
           </div>

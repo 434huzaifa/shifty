@@ -8,6 +8,7 @@ interface ShiftControlsProps {
   pattern: ShiftType[];
   onStartDateChange: (value: string) => void;
   onPatternChange: (value: ShiftType[]) => void;
+  onReset: () => void;
 }
 
 export function ShiftControls({
@@ -15,6 +16,7 @@ export function ShiftControls({
   pattern,
   onStartDateChange,
   onPatternChange,
+  onReset,
 }: ShiftControlsProps) {
   const error = validatePattern(pattern);
   const workCount = pattern.filter((p) => p === "work").length;
@@ -32,7 +34,16 @@ export function ShiftControls({
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-5 text-lg font-semibold text-gray-800">Shift Configuration</h2>
+      <div className="mb-5 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-800">Shift Configuration</h2>
+        <button
+          type="button"
+          onClick={onReset}
+          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 active:scale-95"
+        >
+          ↺ Reset
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Start Date */}
@@ -75,7 +86,6 @@ export function ShiftControls({
               >
                 <span className="transition group-hover:opacity-0">
                   {type === "work" ? "W" : "O"}
-                  {/* <sub className="ml-0.5 text-[9px] opacity-70">{idx + 1}</sub> */}
                 </span>
                 <button
                   type="button"

@@ -104,6 +104,12 @@ export default function Home() {
     setPattern(rotation.pattern);
   };
 
+  const handleReset = () => {
+    setStartDate(`${year}-01-01`);
+    setPattern([]);
+    setSelectedRotationId(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
@@ -122,12 +128,13 @@ export default function Home() {
           pattern={pattern}
           onStartDateChange={(value) => {
             setStartDate(value);
-            setSelectedRotationId(null); // Clear selection when manually editing
+            setSelectedRotationId(null);
           }}
           onPatternChange={(value) => {
             setPattern(value);
-            setSelectedRotationId(null); // Clear selection when manually editing
+            setSelectedRotationId(null);
           }}
+          onReset={handleReset}
         />
 
         {/* Load Saved Rotations */}
