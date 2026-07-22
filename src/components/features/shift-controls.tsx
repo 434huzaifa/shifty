@@ -2,6 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import { validatePattern, type ShiftType } from "@/lib/shift-logic";
+import { SavedRotationsDropdown } from "@/components/ui/saved-rotations-dropdown";
+import { DatePicker } from "@/components/ui/date-picker";
+import type { SavedRotation } from "@/lib/validations";
 
 interface ShiftControlsProps {
   startDate: string;
@@ -9,6 +12,12 @@ interface ShiftControlsProps {
   onStartDateChange: (value: string) => void;
   onPatternChange: (value: ShiftType[]) => void;
   onReset: () => void;
+  savedRotations: SavedRotation[];
+  selectedRotationId: number | null;
+  onSelectRotation: (rotation: SavedRotation) => void;
+  isLoadingRotations: boolean;
+  isValid: boolean;
+  onOpenSaveModal: () => void;
 }
 
 export function ShiftControls({
@@ -17,6 +26,12 @@ export function ShiftControls({
   onStartDateChange,
   onPatternChange,
   onReset,
+  savedRotations,
+  selectedRotationId,
+  onSelectRotation,
+  isLoadingRotations,
+  isValid,
+  onOpenSaveModal,
 }: ShiftControlsProps) {
   const error = validatePattern(pattern);
   const workCount = pattern.filter((p) => p === "work").length;
@@ -51,13 +66,7 @@ export function ShiftControls({
           <label htmlFor="start-date" className="text-sm font-medium text-gray-600">
             Start Date
           </label>
-          <input
-            id="start-date"
-            type="date"
-            value={startDate}
-            onChange={(e) => onStartDateChange(e.target.value)}
-            className="rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-800 shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-          />
+          <DatePicker id="start-date" value={startDate} onChange={onStartDateChange} />
         </div>
 
         {/* Pattern Builder */}
@@ -176,6 +185,28 @@ export function ShiftControls({
             </svg>
             {error}
           </div>
+        )}
+      </div>
+
+      {/* Load / Save row */}
+      <div className="mt-5 flex items-end justify-between gap-4 border-t border-gray-100 pt-5">
+        <div className="w-full max-w-xs">
+          <SavedRotationsDropdown
+            rotations={savedRotations}
+            selectedId={selectedRotationId}
+            onSelect={onSelectRotation}
+            isLoading={isLoadingRotations}
+          />
+        </div>
+
+        {isValid && (
+          <button
+            type="button"
+            onClick={onOpenSaveModal}
+            className="shrink-0 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 active:scale-95"
+          >
+            💾 Save This Rotation
+          </button>
         )}
       </div>
     </div>

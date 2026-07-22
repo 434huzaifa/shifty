@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { format } from "date-fns";
 import { ShiftControls } from "@/components/features/shift-controls";
 import { YearCalendar } from "@/components/features/year-calendar";
 import { Legend } from "@/components/ui/legend";
 import { ShiftStats } from "@/components/features/shift-stats";
 import { SaveModal } from "@/components/ui/save-modal";
-import { SavedRotationsDropdown } from "@/components/ui/saved-rotations-dropdown";
 import {
   validatePattern,
   calculateYearStats,
@@ -18,7 +18,7 @@ import type { SavedRotation } from "@/lib/validations";
 const DEFAULT_PATTERN: ShiftType[] = ["work", "work", "off"];
 
 export default function Home() {
-  const [startDate, setStartDate] = useState("2026-01-01");
+  const [startDate, setStartDate] = useState(() => format(new Date(), "yyyy-MM-dd"));
   const [pattern, setPattern] = useState<ShiftType[]>(DEFAULT_PATTERN);
   const [savedRotations, setSavedRotations] = useState<SavedRotation[]>([]);
   const [selectedRotationId, setSelectedRotationId] = useState<number | null>(null);
@@ -135,17 +135,13 @@ export default function Home() {
             setSelectedRotationId(null);
           }}
           onReset={handleReset}
+          savedRotations={savedRotations}
+          selectedRotationId={selectedRotationId}
+          onSelectRotation={handleLoadRotation}
+          isLoadingRotations={isLoadingRotations}
+          isValid={isValid}
+          onOpenSaveModal={() => setIsSaveModalOpen(true)}
         />
-
-        {/* Load Saved Rotations */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <SavedRotationsDropdown
-            rotations={savedRotations}
-            selectedId={selectedRotationId}
-            onSelect={handleLoadRotation}
-            isLoading={isLoadingRotations}
-          />
-        </div>
 
         {/* Stats */}
         {isValid && (
@@ -157,18 +153,7 @@ export default function Home() {
           />
         )}
 
-        {/* Save Button */}
-        {isValid && (
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={() => setIsSaveModalOpen(true)}
-              className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 active:scale-95"
-            >
-              💾 Save This Rotation
-            </button>
-          </div>
-        )}
+
 
         {/* Legend */}
         <Legend />
