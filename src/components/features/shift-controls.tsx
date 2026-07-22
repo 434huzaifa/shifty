@@ -48,13 +48,13 @@ export function ShiftControls({
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-      <div className="mb-5 flex items-center justify-between">
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+      <div className="mb-5 flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold text-gray-800">Shift Configuration</h2>
         <button
           type="button"
           onClick={onReset}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 active:scale-95"
+          className="shrink-0 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 active:scale-95 sm:px-4"
         >
           ↺ Reset
         </button>
@@ -128,7 +128,7 @@ export function ShiftControls({
               onClick={() => addPill("work")}
               disabled={pattern.length >= 10}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition",
+                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition sm:flex-none",
                 pattern.length >= 10
                   ? "cursor-not-allowed bg-emerald-300"
                   : "bg-emerald-500 hover:bg-emerald-600 active:scale-95"
@@ -142,7 +142,7 @@ export function ShiftControls({
               onClick={() => addPill("off")}
               disabled={pattern.length >= 10}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition",
+                "flex flex-1 items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition sm:flex-none",
                 pattern.length >= 10
                   ? "cursor-not-allowed bg-rose-300"
                   : "bg-rose-500 hover:bg-rose-600 active:scale-95"
@@ -189,8 +189,8 @@ export function ShiftControls({
       </div>
 
       {/* Load / Save row */}
-      <div className="mt-5 flex items-end justify-between gap-4 border-t border-gray-100 pt-5">
-        <div className="w-full max-w-xs">
+      <div className="mt-5 flex flex-col-reverse items-stretch gap-4 border-t border-gray-100 pt-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="w-full sm:max-w-xs">
           <SavedRotationsDropdown
             rotations={savedRotations}
             selectedId={selectedRotationId}

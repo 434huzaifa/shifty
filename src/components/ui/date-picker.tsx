@@ -70,7 +70,7 @@ export function DatePicker({ id, value, onChange }: DatePickerProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-2 rounded-xl border border-gray-200 bg-white p-3 shadow-lg">
+        <div className="absolute z-10 mt-2 max-w-[calc(100vw-2rem)] overflow-x-auto rounded-xl border border-gray-200 bg-white p-3 shadow-lg">
           <DayPicker
             mode="single"
             captionLayout="dropdown"

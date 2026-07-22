@@ -15,7 +15,7 @@ import {
 } from "@/lib/shift-logic";
 import type { SavedRotation } from "@/lib/validations";
 
-const DEFAULT_PATTERN: ShiftType[] = ["work", "work", "off"];
+const DEFAULT_PATTERN: ShiftType[] = [];
 
 export default function Home() {
   const [startDate, setStartDate] = useState(() => format(new Date(), "yyyy-MM-dd"));
@@ -105,7 +105,7 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    setStartDate(`${year}-01-01`);
+    setStartDate(format(new Date(), "yyyy-MM-dd"));
     setPattern([]);
     setSelectedRotationId(null);
   };
@@ -113,15 +113,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
-      <header className="border-b border-gray-200 bg-white/80 px-6 py-5 backdrop-blur-sm">
+      <header className="border-b border-gray-200 bg-white/80 px-4 py-5 backdrop-blur-sm sm:px-6">
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">🗓️ Shifty</h1>
+          <h1 className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl">🗓️ Shifty</h1>
           <p className="mt-1 text-sm text-gray-500">Year-at-a-glance shift rotation calendar</p>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6">
+      <main className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
         {/* Controls */}
         <ShiftControls
           startDate={startDate}
