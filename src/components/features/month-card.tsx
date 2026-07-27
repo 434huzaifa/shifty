@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { getShiftStatus, type ShiftConfig } from "@/lib/shift-logic";
 import { Triangle } from "@/components/ui/triangle-icon";
@@ -187,6 +188,7 @@ export function MonthCard({
               )}
               <button
                 type="button"
+                data-date={cell.date ? format(cell.date, "yyyy-MM-dd") : undefined}
                 disabled={cell.day === null || !cell.isClickable}
                 onClick={(e) => {
                   cell.date && onDayClick?.(cell.date, e);

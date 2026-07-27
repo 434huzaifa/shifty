@@ -35,6 +35,7 @@ export function DayStatusPopup({ date, position, onSelect, onClose }: DayStatusP
   return (
     <div
       ref={containerRef}
+      data-tour="day-status-popup"
       style={{ top: position.top, left: position.left }}
       className="fixed z-50 w-44 rounded-xl border border-gray-200 bg-white p-2 shadow-xl"
     >
@@ -44,6 +45,7 @@ export function DayStatusPopup({ date, position, onSelect, onClose }: DayStatusP
       <div className="flex gap-1.5">
         <button
           type="button"
+          data-tour="day-status-work"
           onClick={() => onSelect("work")}
           className="flex-1 rounded-lg bg-emerald-500 px-2 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-600 active:scale-95"
         >
@@ -51,6 +53,7 @@ export function DayStatusPopup({ date, position, onSelect, onClose }: DayStatusP
         </button>
         <button
           type="button"
+          data-tour="day-status-off"
           onClick={() => onSelect("off")}
           className="flex-1 rounded-lg bg-rose-500 px-2 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-600 active:scale-95"
         >
