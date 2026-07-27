@@ -3,10 +3,8 @@ import { z } from "zod";
 // Validation schema for a shift pattern
 export const shiftPatternSchema = z
   .array(z.enum(["work", "off"]))
-  .min(2, "Minimum 2 days in pattern")
-  .max(10, "Maximum 10 days in pattern")
-  .refine((pattern) => pattern.some((p) => p === "work"), "Need at least 1 work day")
-  .refine((pattern) => pattern.some((p) => p === "off"), "Need at least 1 off day");
+  .min(1, "Minimum 1 day in pattern")
+  .max(7, "Maximum 7 days in pattern");
 
 // Validation schema for saving a rotation
 export const saveRotationSchema = z.object({

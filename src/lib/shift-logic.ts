@@ -42,22 +42,65 @@ export function getShiftStatus(date: Date, config: ShiftConfig): ShiftStatus {
   return pattern[index];
 }
 
+function normalizeDate(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+/**
+ * Extends, seeds, or overwrites a shift pattern based on a clicked date.
+ * - Empty pattern: seeds a single-day pattern starting at clickedDate.
+ * - clickedDate is one day before startDate: unshifts (startDate moves back).
+ * - clickedDate is one day after the cycle end: pushes (pattern grows forward).
+ * - clickedDate is inside the existing range: overwrites that day's status.
+ * Boundary extensions are a no-op once the pattern already has 7 days.
+ */
+export function extendPatternRange(
+  config: ShiftConfig,
+  clickedDate: Date,
+  newType: ShiftType
+): ShiftConfig {
+  const { startDate, pattern } = config;
+  const date = normalizeDate(clickedDate);
+
+  if (pattern.length === 0) {
+    return { startDate: date, pattern: [newType] };
+  }
+
+  const normalizedStart = normalizeDate(startDate);
+  const cycleEnd = new Date(normalizedStart);
+  cycleEnd.setDate(cycleEnd.getDate() + pattern.length - 1);
+
+  const deltaFromStart = differenceInCalendarDays(date, normalizedStart);
+
+  if (deltaFromStart >= 0 && deltaFromStart < pattern.length) {
+    const nextPattern = [...pattern];
+    nextPattern[deltaFromStart] = newType;
+    return { startDate: normalizedStart, pattern: nextPattern };
+  }
+
+  if (pattern.length >= 7) {
+    return config;
+  }
+
+  if (deltaFromStart === -1) {
+    return { startDate: date, pattern: [newType, ...pattern] };
+  }
+
+  if (differenceInCalendarDays(date, cycleEnd) === 1) {
+    return { startDate: normalizedStart, pattern: [...pattern, newType] };
+  }
+
+  return config;
+}
+
 /**
  * Validation rules:
- * - Min 2 pills total
- * - Max 10 pills total
- * - Min 1 work pill
- * - Min 1 off pill
+ * - Min 1 day
+ * - Max 7 days
  */
 export function validatePattern(pattern: ShiftType[]): string | null {
-  if (pattern.length < 2) return "Minimum 2 days in pattern";
-  if (pattern.length > 10) return "Maximum 10 days in pattern";
-
-  const workCount = pattern.filter((p) => p === "work").length;
-  const offCount = pattern.filter((p) => p === "off").length;
-
-  if (workCount < 1) return "Need at least 1 work day";
-  if (offCount < 1) return "Need at least 1 off day";
+  if (pattern.length < 1) return "Minimum 1 day in pattern";
+  if (pattern.length > 7) return "Maximum 7 days in pattern";
 
   return null; // valid
 }
