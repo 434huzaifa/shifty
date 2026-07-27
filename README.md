@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shifty
+
+Shifty is a year-at-a-glance shift rotation planner. Define a repeating shift pattern, pick a start date, and Shifty lays out the whole year so you can see which days you're on and off at a glance.
+
+## Features
+
+- **Year calendar view** — every month rendered together, with each day colored by shift status.
+- **Custom shift patterns** — configure a repeating on/off (or multi-shift) rotation from a chosen start date.
+- **Day status popup** — click a day to inspect or override its status.
+- **Date picker controls** for adjusting the rotation start and navigating the calendar.
+- **Guided tutorial** (via `driver.js`) that walks new users through setting up their first pattern.
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org) (App Router) with React 19 and TypeScript
+- [Tailwind CSS](https://tailwindcss.com) for styling
+- [Drizzle ORM](https://orm.drizzle.team) with PostgreSQL for persistence
+- [Zod](https://zod.dev) for validation
+- [date-fns](https://date-fns.org) for date math
+- [driver.js](https://driverjs.com) for the onboarding tour
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js and a package manager (pnpm is used for the lockfile in this repo)
+- A running PostgreSQL instance
+
+### Setup
+
+1. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+2. Copy the environment example and fill in your database connection:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   ```
+   DATABASE_URL="postgres://postgres:postgres@localhost:5432/shifty_db"
+   NEXT_PUBLIC_APP_URL="http://localhost:3000"
+   ```
+
+3. Push the database schema (or run migrations):
+
+   ```bash
+   pnpm db:push
+   # or, using the generated migrations in ./drizzle
+   pnpm db:migrate
+   ```
+
+4. Start the development server:
+
+   ```bash
+   pnpm dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) to see the app.
+
+## Project Structure
+
+```
+src/
+  app/
+    (dashboard)/     # main calendar dashboard route
+    api/rotations/   # rotation API route
+  components/
+    features/        # year calendar, month card, shift controls/stats
+    ui/               # shared UI primitives
+  db/
+    schema/           # Drizzle schema definitions
+  server/actions/     # server actions
+  lib/                # shared utilities
+drizzle/              # generated SQL migrations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Available Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the development server |
+| `pnpm build` | Build for production |
+| `pnpm start` | Run the production build |
+| `pnpm lint` | Lint the codebase |
+| `pnpm format` | Format with Prettier |
+| `pnpm db:generate` | Generate Drizzle migrations from schema changes |
+| `pnpm db:migrate` | Run pending migrations |
+| `pnpm db:push` | Push the schema directly to the database |
+| `pnpm db:studio` | Open Drizzle Studio |
